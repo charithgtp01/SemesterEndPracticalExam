@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.TextView
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.navigation.fragment.NavHostFragment
 import com.example.finalsemesterexam.Constants
 import com.example.finalsemesterexam.R
 import com.example.finalsemesterexam.SharedPref
-import com.example.finalsemesterexam.User
+import com.example.finalsemesterexam.entities.User
 import com.example.finalsemesterexam.databinding.FragmentHomeBinding
 import com.google.gson.Gson
 

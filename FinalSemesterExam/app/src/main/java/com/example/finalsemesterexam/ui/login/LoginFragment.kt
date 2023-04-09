@@ -8,53 +8,53 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.navigation.fragment.findNavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.finalsemesterexam.*
-import com.example.finalsemesterexam.databinding.FragmentSettingsBinding
+import com.example.finalsemesterexam.databinding.FragmentLoginBinding
 import com.example.finalsemesterexam.entities.User
 import com.example.finalsemesterexam.interfaces.UserPreferenceListener
+import com.example.finalsemesterexam.ui.login.ViewModel
 import com.google.gson.Gson
 
-class SettingsFragment : Fragment() {
+class LoginFragment : Fragment() {
 
-    private lateinit var binding: FragmentSettingsBinding
-    private val viewModel: SettingsViewModel by viewModels()
-
+    private lateinit var binding: FragmentLoginBinding
+    private val viewModel: ViewModel by viewModels()
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = FragmentSettingsBinding.inflate(inflater, container, false)
+        binding = FragmentLoginBinding.inflate(inflater, container, false)
         val root: View = binding.root
         binding.lifecycleOwner = this
         binding.vm = viewModel
 
-        val userString = activity?.let { SharedPref(it).getPref(Constants.LOGGED_IN_USER) }
-        val gson = Gson()
-
-        val loggedInUser = gson.fromJson(userString, User::class.java)
-        viewModel.name = loggedInUser.username
-        viewModel.passoword = loggedInUser.password
+        context?.let { SharedPref(it).clearPref() }
 
         binding.btnSubmit.setOnClickListener {
 
             val name = viewModel.name
-            val password = viewModel.passoword
+            val passoword = viewModel.passoword
 
             when {
                 name.isBlank() -> {
                     Toast.makeText(context, "Username is mandatory", Toast.LENGTH_SHORT).show()
                 }
 
-                password.isBlank() -> {
+                passoword.isBlank() -> {
                     Toast.makeText(context, "Password is mandatory", Toast.LENGTH_SHORT)
+                        .show()
+                }
+
+                passoword != Constants.PASSWORD || name != Constants.USERNAME -> {
+                    Toast.makeText(context, "Invalid Credentials", Toast.LENGTH_SHORT)
                         .show()
                 }
 
                 else -> {
 
-                    val user = User(name, password)
+                    val user = User(name, passoword)
                     val gson = Gson()
                     context?.let { it1 ->
                         SharedPref(it1).savePref(
@@ -63,7 +63,7 @@ class SettingsFragment : Fragment() {
                             object : UserPreferenceListener {
 
                                 override fun onSuccess() {
-                                    findNavController().popBackStack()
+                                    goToHome()
                                 }
 
                                 override fun onError(error: String) {
@@ -74,6 +74,11 @@ class SettingsFragment : Fragment() {
                 }
             }
         }
+
         return root
+    }
+
+    private fun goToHome() {
+        NavHostFragment.findNavController(this).navigate(R.id.action_nav_home_to_nav_home)
     }
 }

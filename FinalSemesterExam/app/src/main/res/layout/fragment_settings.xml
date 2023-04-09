@@ -5,7 +5,7 @@
 
         <variable
             name="vm"
-            type="com.example.finalsemesterexam.ViewModel" />
+            type="com.example.finalsemesterexam.ui.settings.SettingsViewModel" />
     </data>
 
     <androidx.constraintlayout.widget.ConstraintLayout
